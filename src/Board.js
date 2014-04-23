@@ -4,13 +4,31 @@
 
 (function() {
 
-  window.Board = Backbone.Model.extend({
+     window.Board = Backbone.Model.extend({
 
     initialize: function (params) {
       if (_.isUndefined(params) || _.isNull(params)) {
-        console.log('Good guess! But to use the Board() constructor, you must pass it an argument in one of the following formats:');
-        console.log('\t1. An object. To create an empty board of size n:\n\t\t{n: %c<num>%c} - Where %c<num> %cis the dimension of the (empty) board you wish to instantiate\n\t\t%cEXAMPLE: var board = new Board({n:5})', 'color: blue;', 'color: black;','color: blue;', 'color: black;', 'color: grey;');
-        console.log('\t2. An array of arrays (a matrix). To create a populated board of size n:\n\t\t[ [%c<val>%c,%c<val>%c,%c<val>%c...], [%c<val>%c,%c<val>%c,%c<val>%c...], [%c<val>%c,%c<val>%c,%c<val>%c...] ] - Where each %c<val>%c is whatever value you want at that location on the board\n\t\t%cEXAMPLE: var board = new Board([[1,0,0],[0,1,0],[0,0,1]])', 'color: blue;', 'color: black;','color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: grey;');
+        console.log('Good guess! But to use the Board() constructor, you must pass'
+                    + 'it an argument in one of the following formats:');
+        console.log('\t1. An object. To create an empty board of size n:\n\t\t{n:'
+                    + ' %c<num>%c} - Where %c<num> %cis the dimension of the (empty) board'
+                    + ' you wish to instantiate\n\t\t%cEXAMPLE: var board = new'
+                    + ' Board({n:5})',
+                    'color: blue;', 'color: black;','color: blue;', 'color: black;',
+                    'color: grey;');
+        console.log('\t2. An array of arrays (a matrix). To create a populated board of'
+                    + ' size n:\n\t\t[ [%c<val>%c,%c<val>%c,%c<val>%c...],'
+                    + ' [%c<val>%c,%c<val>%c,%c<val>%c...],'
+                    + ' [%c<val>%c,%c<val>%c,%c<val>%c...] ] - Where each %c<val>%c is'
+                    + ' whatever value you want at that location on the'
+                    + ' board\n\t\t%cEXAMPLE: var board = new'
+                    + ' Board([[1,0,0],[0,1,0],[0,0,1]])',
+                    'color: blue;', 'color: black;','color: blue;', 'color: black;',
+                    'color: blue;', 'color: black;', 'color: blue;', 'color: black;',
+                    'color: blue;', 'color: black;', 'color: blue;', 'color: black;',
+                    'color: blue;', 'color: black;', 'color: blue;', 'color: black;',
+                    'color: blue;', 'color: black;', 'color: blue;', 'color: black;',
+                    'color: grey;');
       } else if (params.hasOwnProperty('n')) {
         this.set(makeEmptyMatrix(this.get('n')));
       } else {
@@ -44,14 +62,20 @@
     hasAnyQueenConflictsOn: function(rowIndex, colIndex) {
       return (
         this.hasRowConflictAt(rowIndex) ||
-        this.hasColConflictAt(colIndex) ||
-        this.hasMajorDiagonalConflictAt(this._getFirstRowColumnIndexForMajorDiagonalOn(rowIndex, colIndex)) ||
-        this.hasMinorDiagonalConflictAt(this._getFirstRowColumnIndexForMinorDiagonalOn(rowIndex, colIndex))
+          this.hasColConflictAt(colIndex) ||
+          this.hasMajorDiagonalConflictAt(
+            this._getFirstRowColumnIndexForMajorDiagonalOn(rowIndex, colIndex)
+          ) ||
+          this.hasMinorDiagonalConflictAt(
+            this._getFirstRowColumnIndexForMinorDiagonalOn(rowIndex, colIndex)
+          )
       );
     },
 
     hasAnyQueensConflicts: function() {
-      return this.hasAnyRooksConflicts() || this.hasAnyMajorDiagonalConflicts() || this.hasAnyMinorDiagonalConflicts();
+      return this.hasAnyRooksConflicts() ||
+        this.hasAnyMajorDiagonalConflicts() ||
+        this.hasAnyMinorDiagonalConflicts();
     },
 
     _isInBounds: function(rowIndex, colIndex) {
@@ -69,7 +93,7 @@
     \__ \ || (_| | |  | |_  | | | |  __/ | |  __/_
     |___/\__\__,_|_|   \__| |_| |_|\___|_|  \___(_)
 
- */
+*/
     /*=========================================================================
     =                 TODO: fill in these Helper Functions                    =
     =========================================================================*/
@@ -79,12 +103,12 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      return _.filter(this.get(rowIndex), _.identity).length > 1;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      return _.some(_.range(this.get('n')), this.hasRowConflictAt, this);
     },
 
 
@@ -94,12 +118,13 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      return _.filter(_.map(this.rows(), function(row) {return row[colIndex];}),
+                      _.identity).length > 1;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      return _.some(_.range(this.get('n')), this.hasColConflictAt, this);
     },
 
 
@@ -109,12 +134,15 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      return _.filter(_.map(this.rows(), function(row, rowNum) {
+        return row[majorDiagonalColumnIndexAtFirstRow + rowNum];
+      }), _.identity).length > 1;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      return false; // fixme
+      var n = this.get('n');
+      return _.some(_.range(-n + 1, n), this.hasMajorDiagonalConflictAt, this);
     },
 
 
@@ -124,12 +152,15 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      return _.filter(_.map(this.rows(), function(row, rowNum) {
+        return row[minorDiagonalColumnIndexAtFirstRow - rowNum];
+      }), _.identity).length > 1;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      var n = this.get('n');
+      return _.some(_.range(0, 2*n - 1), this.hasMinorDiagonalConflictAt, this);
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/

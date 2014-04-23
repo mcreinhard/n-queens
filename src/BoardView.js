@@ -15,16 +15,18 @@
       var model = this.model;
 
       return this.$el.html(_(_.range(model.get('n'))).map(function(rowIndex) {
-        return $('<tr class="row"/>').html(_(_.range(model.get('n'))).map(function(colIndex) {
-          var $square = $('<td class="square"/>').on('click', function(e) {
-            model.togglePiece(rowIndex, colIndex);
-          }).addClass(['positive', 'negative'][(rowIndex + colIndex) % 2]);
-          model.get(rowIndex)[colIndex] && $square.html('&#9813;');
-          model.hasAnyQueenConflictsOn(rowIndex, colIndex) && $square.addClass('inConflict');
-          return $square;
-        }));
+        return $('<tr class="row"/>')
+          .html(_(_.range(model.get('n'))).map(function(colIndex) {
+            var $square = $('<td class="square"/>').on('click', function(e) {
+              model.togglePiece(rowIndex, colIndex);
+            }).addClass(['positive', 'negative'][(rowIndex + colIndex) % 2]);
+            model.get(rowIndex)[colIndex] && $square.html('&#9813;');
+            model.hasAnyQueenConflictsOn(rowIndex, colIndex) &&
+              $square.addClass('inConflict');
+            return $square;
+          }));
       }));
     }
   });
-
+  
 }());
